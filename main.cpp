@@ -51,8 +51,8 @@ int main(int argc, char* argv[]) {
 
     char* dev = argv[1];
     string block_url = argv[2];
-    std::transform(block_url.begin(), block_url.end(), block_url.begin(),
-        [](unsigned char c){ return std::tolower(c); });
+    //소문자 변환
+    transform(block_url.begin(), block_url.end(), block_url.begin(),[](unsigned char c){ return tolower(c); });
 
     char errbuf[PCAP_ERRBUF_SIZE];
     pcap_t* handle = pcap_open_live(dev, BUFSIZ, 1, 1000, errbuf);
@@ -87,12 +87,14 @@ int main(int argc, char* argv[]) {
       //Check Next IP Header
       if (packet_info->eth_header.ether_type == 0x8 && packet_info->ip_header.ip_p == 0x06 && packet_info->tcp_header.th_sport == 0x5000)
       {
+          //size 계산
           ip_size = (packet_info->ip_header.header_length&0xF0>>4)*4;
           tcp_size = ((packet_info->tcp_header.header_length&0xF0)>>4)*4;
           tcp_data_size = packet_size - (eth_size+ip_size + tcp_size);
 
 
           http = (u_char*)(packet+eth_size+ip_size+tcp_size);
+          
           regex http_pattern("HTTP");
           regex host_pattern("Host: ");
           string http_str((char*)http);
