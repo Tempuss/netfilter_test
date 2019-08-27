@@ -15,21 +15,24 @@
 #include <ifaddrs.h>
 #include <string.h>
 #include <arpa/inet.h>
-
 #include "libnet-types.h"
 #include "libnet-macros.h"
 #include "libnet-headers.h"
-
 #include <iostream>
 #include <algorithm>
-
 #include <ifaddrs.h>
 #include <string.h>
 #include <fstream>
 #include <sstream>
 #include <regex>
+#include <cctype>
+#include <string>
+#include <netinet/in.h>
+#include <linux/types.h>
+#include <linux/netfilter.h>            /* for NF_ACCEPT */
+#include <errno.h>
 
-
+#include <libnetfilter_queue/libnetfilter_queue.h>
 #include <cctype>
 #include <string>
 #include <algorithm>
@@ -45,7 +48,7 @@ using namespace std;
 
 #pragma pack(1)
 struct packet {
-    libnet_ethernet_hdr eth_header;
+    //libnet_ethernet_hdr eth_header;
     libnet_ipv4_hdr ip_header;
     libnet_tcp_hdr tcp_header;
 };
@@ -53,8 +56,11 @@ struct packet {
 
 
 
+
+
+void printHex(int length, struct nfq_data* packet);
 void printHex(int length, const u_char* packet);
-void printHex(int length, unsigned char* packet);
+void printHex(int length, unsigned char *packet);
 void printHex(int length, uint8_t* packet);
 void printHex(int length, uint32_t* packet);
 
@@ -71,4 +77,12 @@ int inArrayCheck(uint8_t arr[], uint8_t needle);
 int inArrayCheck(char *arr[], char *needle);
 
 char *ipToCharIp(uint32_t ip);
+string replace_all(const string &message,const string &pattern,const string &replace);
+template<typename Out>
+void split(string &s, char delim, Out result);
+vector<string> split(string &s, char delim);
+
+
+
+void dump(unsigned char* buf, int size);
 #endif // DEFINE_H

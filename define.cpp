@@ -166,3 +166,39 @@ void printHex(int length, const packet* packet ) {
 
     printf("\n");
 }
+
+
+string replace_all(const string &message,const string &pattern,const string &replace)
+{
+    string result = message; string::size_type pos = 0;
+
+    while ((pos = result.find(pattern)) != string::npos)
+    {
+        result.replace(pos, pattern.size(), replace);
+    }
+    return result;
+}
+
+template<typename Out>
+void split(string &s, char delim, Out result)
+{
+    stringstream ss(s);
+    string item;
+    while(getline(ss, item, delim))
+        *(result++) = item;
+}
+vector<string> split(string &s, char delim)
+{
+    vector<string> elem;
+    split(s, delim, back_inserter(elem));
+
+    return elem;
+}
+void dump(unsigned char* buf, int size) {
+    int i;
+    for (i = 0; i < size; i++) {
+        if (i % 16 == 0)
+            printf("\n");
+        printf("%02x ", buf[i]);
+    }
+}
